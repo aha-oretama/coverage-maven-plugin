@@ -1,11 +1,9 @@
 package com.contaazul.coverage;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.io.File;
-import java.io.IOException;
+import com.contaazul.coverage.cobertura.CoverageException;
+import com.contaazul.coverage.github.GithubRepo;
+import com.contaazul.coverage.pullrequest.PullRequestValidator;
+import com.contaazul.coverage.pullrequest.PullRequestValidatorBuilder;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.project.MavenProject;
@@ -13,10 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.contaazul.coverage.cobertura.CoverageException;
-import com.contaazul.coverage.github.GithubRepo;
-import com.contaazul.coverage.pullrequest.PullRequestValidator;
-import com.contaazul.coverage.pullrequest.PullRequestValidatorBuilder;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.*;
 
 public class PullRequestValidatorBuilderTest {
 
@@ -45,6 +45,13 @@ public class PullRequestValidatorBuilderTest {
 	public void buildInvalid() throws Exception {
 		new PullRequestValidatorBuilder()
 				.build();
+	}
+
+	@Test(expected = CoverageException.class)
+	public void buildInvalidWithOnlyHostname() throws Exception {
+		new PullRequestValidatorBuilder()
+			.host(null,"api.github.com")
+			.build();
 	}
 
 	@Test

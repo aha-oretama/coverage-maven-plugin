@@ -1,16 +1,16 @@
 package com.contaazul.coverage;
 
-import java.util.List;
+import com.contaazul.coverage.github.GithubRepo;
+import com.contaazul.coverage.maven.CoverageMavenProject;
+import com.contaazul.coverage.pullrequest.PullRequestValidator;
+import com.contaazul.coverage.pullrequest.PullRequestValidatorBuilder;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.contaazul.coverage.github.GithubRepo;
-import com.contaazul.coverage.maven.CoverageMavenProject;
-import com.contaazul.coverage.pullrequest.PullRequestValidator;
-import com.contaazul.coverage.pullrequest.PullRequestValidatorBuilder;
+import java.util.List;
 
 /**
  * 
@@ -36,6 +36,22 @@ public class CoveragePullRequestMojo extends AbstractMojo {
 	 * @parameter property="github.pullRequestId"
 	 */
 	private int pullRequestId;
+
+
+	/**
+	 * Github proxy
+	 *
+	 * @parameter property="github.proxy"
+	 */
+	private String proxy;
+
+	/**
+	 * Github hostname
+	 *
+	 * @parameter property="github.hostname"
+	 */
+	private String hostname;
+
 
 	/**
 	 * Github repository owner
@@ -97,6 +113,7 @@ public class CoveragePullRequestMojo extends AbstractMojo {
 		final PullRequestValidator pr = new PullRequestValidatorBuilder()
 				.oauth2(oauth2)
 				.pullRequest(pullRequestId)
+				.host(proxy, hostname)
 				.repository(new GithubRepo(repositoryName, repositoryOwner))
 				.minCoverage(minimumCoverage)
 				.breakOnLowCov(breakOnLowCov)

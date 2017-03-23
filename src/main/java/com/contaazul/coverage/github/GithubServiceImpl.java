@@ -1,8 +1,5 @@
 package com.contaazul.coverage.github;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -11,6 +8,9 @@ import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 public class GithubServiceImpl implements GithubService {
 	private static final Logger logger = LoggerFactory
@@ -24,10 +24,15 @@ public class GithubServiceImpl implements GithubService {
 
 	private IssueService issueService;
 
-	public GithubServiceImpl(GithubRepo repo, String oauth2, int pullRequestId) {
+	public GithubServiceImpl(String proxy, String hostname, GithubRepo repo, String oauth2, int pullRequestId) {
 		this.repo = repo;
 		this.pullRequestId = pullRequestId;
-		client = new GitHubClient().setOAuth2Token(oauth2);
+		if (proxy == null || hostname == null) {
+			client = new GitHubClient();
+		} else {
+			client = new GitHubClient(hostname, -1, proxy);
+		}
+		client.setOAuth2Token(oauth2);
 	}
 
 	/*

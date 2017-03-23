@@ -1,21 +1,5 @@
 package com.contaazul.coverage.github;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
@@ -29,6 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.*;
+
 public class GithubServiceTest {
 	private GithubService gh;
 	@Mock
@@ -39,7 +34,7 @@ public class GithubServiceTest {
 	public void init() {
 		initMocks(this);
 		repo = new GithubRepo("caarlos0", "not-a-real-repo");
-		gh = spy(new GithubServiceImpl(repo, "not a real oauth ", 42));
+		gh = spy(new GithubServiceImpl(null, null, repo, "not a real oauth ", 42));
 	}
 
 	@Test

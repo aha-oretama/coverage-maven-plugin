@@ -9,6 +9,8 @@ public class PullRequestValidatorBuilder {
 	private int minCoverage = 95;
 	private String oauth2;
 	private int pullRequestId = -1;
+	private String proxy;
+	private String hostname;
 	private GithubRepo repo;
 	private boolean breakOnLowCov = true;
 	private boolean commentChunks;
@@ -31,6 +33,12 @@ public class PullRequestValidatorBuilder {
 		return this;
 	}
 
+	public PullRequestValidatorBuilder host(String proxy, String hostname) {
+		this.proxy = proxy;
+		this.hostname = hostname;
+		return this;
+	}
+
 	public PullRequestValidatorBuilder repository(GithubRepo githubRepo) {
 		this.repo = githubRepo;
 		return this;
@@ -43,8 +51,7 @@ public class PullRequestValidatorBuilder {
 
 	public PullRequestValidator build() {
 		validate();
-		final GithubService gh = new GithubServiceImpl(repo, oauth2,
-				pullRequestId);
+		final GithubService gh = new GithubServiceImpl(proxy, hostname, repo, oauth2, pullRequestId);
 		return create(gh);
 	}
 
@@ -56,12 +63,19 @@ public class PullRequestValidatorBuilder {
 	}
 
 	private void validate() {
-		if (repo == null || oauth2 == null || pullRequestId < 1)
+		if (repo == null || oauth2 == null || pullRequestId < 1) {
 			throw new CoverageException("Can't build GithubService.");
+		}
+
+		// Not Supported only hostname parameters.
+		if (hostname != null && proxy == null) {
+			throw new CoverageException("Can't build GithubService.");
+		}
 	}
 
 	public PullRequestValidatorBuilder commentChunks(boolean commentChunks) {
 		this.commentChunks = commentChunks;
 		return this;
 	}
+
 }
